@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { MessageCircle, X, RotateCcw, Search } from "lucide-react";
+import { MessageCircle, X, RotateCcw } from "lucide-react";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
@@ -92,7 +92,7 @@ function ChatPanel({ initial, onClose, onReset }: { initial: UIMessage[]; onClos
                     const tp = part as Parameters<typeof ToolHeader>[0] & { input?: unknown; output?: unknown; errorText?: string };
                     return (
                       <Tool key={i} defaultOpen={false}>
-                        <ToolHeader type={tp.type} state={tp.state} title="Searching listings" icon={<Search className="h-4 w-4" />} />
+                        <ToolHeader type={tp.type} state={tp.state} title="Searching listings" />
                         <ToolContent>
                           <ToolInput input={tp.input} />
                           <ToolOutput output={tp.output} errorText={tp.errorText} />
