@@ -184,7 +184,7 @@ function ProductDialog() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const empty = { title: "", description: "", price: "", category: CATEGORIES[0], sizes: "", stock: "1" };
+  const empty = { title: "", description: "", price: "", category: CATEGORIES[0] ?? "Tops", sizes: "", stock: "1" };
   const [f, setF] = useState(empty);
 
   const save = async (e: React.FormEvent) => {
