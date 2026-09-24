@@ -45,7 +45,7 @@ function CartPage() {
         seller_id: sellerId,
         total,
         customer_phone: phone,
-        customer_name: session.user.user_metadata?.display_name ?? session.user.email ?? "",
+        customer_name: session.user.user_metadata?.["display_name"] ?? session.user.email ?? "",
       })
       .select()
       .single();
@@ -82,7 +82,7 @@ function CartPage() {
         const total = list.reduce((n, i) => n + i.price * i.quantity, 0);
         return (
           <section key={sellerId} className="mt-8 rounded border-2 border-foreground">
-            <div className="bg-secondary px-5 py-3 font-display text-secondary-foreground">{list[0].shopName || "Vendor"}</div>
+            <div className="bg-secondary px-5 py-3 font-display text-secondary-foreground">{list[0]?.shopName || "Vendor"}</div>
             <ul className="divide-y">
               {list.map((i) => (
                 <li key={i.productId + i.size} className="flex items-center gap-4 p-4">

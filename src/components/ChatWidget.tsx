@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { MessageCircle, X, RotateCcw, Search } from "lucide-react";
+import { DefaultChatTransport, type ToolUIPart, type UIMessage } from "ai";
+import { MessageCircle, X, RotateCcw } from "lucide-react";
 import { Conversation, ConversationContent, ConversationScrollButton } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from "@/components/ai-elements/prompt-input";
@@ -89,10 +89,10 @@ function ChatPanel({ initial, onClose, onReset }: { initial: UIMessage[]; onClos
                 {m.parts.map((part, i) => {
                   if (part.type === "text") return <MessageResponse key={i}>{part.text}</MessageResponse>;
                   if (part.type.startsWith("tool-") && "state" in part) {
-                    const tp = part as Parameters<typeof ToolHeader>[0] & { input?: unknown; output?: unknown; errorText?: string };
+                    const tp = part as ToolUIPart;
                     return (
                       <Tool key={i} defaultOpen={false}>
-                        <ToolHeader type={tp.type} state={tp.state} title="Searching listings" icon={<Search className="h-4 w-4" />} />
+                        <ToolHeader type={tp.type} state={tp.state} title="Searching listings" />
                         <ToolContent>
                           <ToolInput input={tp.input} />
                           <ToolOutput output={tp.output} errorText={tp.errorText} />
