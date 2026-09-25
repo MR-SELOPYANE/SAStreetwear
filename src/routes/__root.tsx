@@ -16,6 +16,7 @@ import { CartProvider } from "@/lib/cart";
 import { Header } from "@/components/Header";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Toaster } from "@/components/ui/sonner";
+import { OfflineSupport } from "@/components/OfflineSupport";
 
 function NotFoundComponent() {
   return (
@@ -103,6 +104,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
+          <OfflineSupport />
           <Header />
           <main className="min-h-[70vh]">
             <Outlet />
