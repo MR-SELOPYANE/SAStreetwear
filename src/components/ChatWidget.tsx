@@ -87,7 +87,10 @@ function ChatPanel({ initial, onClose, onReset }: { initial: UIMessage[]; onClos
             <Message key={m.id} from={m.role}>
               <MessageContent className={m.role === "user" ? "bg-primary text-primary-foreground" : "bg-transparent"}>
                 {m.parts.map((part, i) => {
-                  if (part.type === "text") return <MessageResponse key={i}>{part.text}</MessageResponse>;
+                  if (part.type === "text")
+                    return m.role === "user"
+                      ? <p key={i} className="whitespace-pre-wrap text-sm text-primary-foreground">{part.text}</p>
+                      : <MessageResponse key={i}>{part.text}</MessageResponse>;
                   if (part.type.startsWith("tool-") && "state" in part) {
                     const tp = part as ToolUIPart;
                     return (
