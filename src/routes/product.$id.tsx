@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatZAR, type Product } from "@/lib/format";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
+import { mapLink, waNumber } from "@/lib/lowdata";
 
 export const Route = createFileRoute("/product/$id")({
   head: () => ({
@@ -99,9 +100,9 @@ function ProductPage() {
             <Link to="/shop/$id" params={{ id: p.seller_id }} className="font-display text-xl hover:underline">
               {p.sellers.shop_name}
             </Link>
-            <p className="mt-2 flex items-center gap-2 text-sm"><MapPin className="h-4 w-4" /> {p.sellers.location}</p>
+            <a href={mapLink(p.sellers.location)} target="_blank" rel="noreferrer" className="mt-2 flex items-center gap-2 text-sm underline"><MapPin className="h-4 w-4" /> {p.sellers.location}</a>
             {p.sellers.phone && (
-              <a href={`https://wa.me/${p.sellers.phone.replace(/\D/g, "").replace(/^0/, "27")}`} target="_blank" rel="noreferrer" className="mt-1 flex items-center gap-2 text-sm underline">
+              <a href={`https://wa.me/${waNumber(p.sellers.phone)}`} target="_blank" rel="noreferrer" className="mt-1 flex items-center gap-2 text-sm underline">
                 <Phone className="h-4 w-4" /> WhatsApp the vendor
               </a>
             )}
