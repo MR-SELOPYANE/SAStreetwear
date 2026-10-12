@@ -1,18 +1,35 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Shirt } from "lucide-react";
+import { useState } from "react";
+import { ImageIcon, MapPin, Shirt } from "lucide-react";
 import { formatZAR, type Product } from "@/lib/format";
+import { useLowData } from "@/lib/lowdata";
 
 export function ProductCard({ p }: { p: Product }) {
+  const { lowData } = useLowData();
+  const [show, setShow] = useState(false);
+  const hidePhoto = lowData && !show;
   return (
     <Link to="/product/$id" params={{ id: p.id }} className="group block">
       <div className="relative aspect-[4/5] overflow-hidden rounded border bg-muted">
-        {p.image_url ? (
+        {p.image_url && !hidePhoto ? (
           <img
             src={p.image_url}
             alt={p.title}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+        ) : p.image_url ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setShow(true);
+            }}
+            className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs font-semibold text-muted-foreground"
+          >
+            <ImageIcon className="h-8 w-8" /> Tap to load photo
+          </button>
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
             <Shirt className="h-10 w-10" />

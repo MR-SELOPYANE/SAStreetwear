@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ShoppingBag, User, Store, Shield, LogOut, Package } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
+import { useLowData } from "@/lib/lowdata";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +14,16 @@ import {
 export function Header() {
   const { session, isAdmin, signOut } = useAuth();
   const { count } = useCart();
+  const { lowData, toggle } = useLowData();
   const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-      <div className="bg-secondary py-1.5 text-center text-xs font-semibold tracking-wide text-secondary-foreground">
-        ORDER ONLINE · PAY CASH ON COLLECTION · SUPPORT LOCAL VENDORS
+      <div className="flex items-center justify-center gap-3 bg-secondary px-3 py-1.5 text-center text-xs font-semibold tracking-wide text-secondary-foreground">
+        <span className="hidden sm:inline">ORDER ONLINE · PAY CASH ON COLLECTION · SUPPORT LOCAL VENDORS</span>
+        <button onClick={toggle} className="rounded border border-secondary-foreground/40 px-2 py-0.5 uppercase" aria-pressed={lowData}>
+          Data saver: {lowData ? "On" : "Off"}
+        </button>
       </div>
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4">
         <Link to="/" className="font-display text-xl leading-none sm:text-2xl">
