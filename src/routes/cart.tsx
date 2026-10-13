@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart, type CartItem } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
 import { formatZAR } from "@/lib/format";
+import { waNumber } from "@/lib/lowdata";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -27,6 +28,7 @@ function CartPage() {
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
+  const [alert, setAlert] = useState<{ shop: string; url: string } | null>(null);
 
   const groups = items.reduce<Record<string, CartItem[]>>((acc, i) => {
     (acc[i.sellerId] ??= []).push(i);
@@ -58,9 +60,31 @@ function CartPage() {
     );
     setBusy(null);
     if (e2) return toast.error(e2.message);
+    const { data: s } = await supabase.from("sellers").select("shop_name, phone").eq("id", sellerId).maybeSingle();
+    if (s?.phone) {
+      const msg = `Hi ${s.shop_name}! New SA Streetwear order (#${order.id.slice(0, 6)}):\n${list
+        .map((i) => `${i.quantity} x ${i.title}${i.size ? ` (${i.size})` : ""}`)
+        .join("\n")}\nTotal ${formatZAR(total)} — cash on collection. My number: ${phone}`;
+      setAlert({ shop: s.shop_name, url: `https://wa.me/${waNumber(s.phone)}?text=${encodeURIComponent(msg)}` });
+    }
     clearSeller(sellerId);
     toast.success("Order placed! The vendor will get it ready for collection.");
   };
+
+  if (alert)
+    return (
+      <div className="mx-auto max-w-xl px-4 py-20 text-center">
+        <h1 className="text-4xl">Order placed!</h1>
+        <p className="mt-3 text-muted-foreground">Let {alert.shop} know straight away. They may not check the website often.</p>
+        <a href={alert.url} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded bg-primary px-6 py-3 font-semibold text-primary-foreground">
+          Send order to vendor on WhatsApp
+        </a>
+        <div className="mt-4 flex justify-center gap-4 text-sm underline">
+          <Link to="/orders">Track my order</Link>
+          <button onClick={() => setAlert(null)}>Back to cart</button>
+        </div>
+      </div>
+    );
 
   if (!items.length)
     return (
