@@ -13,6 +13,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { StatusBadge } from "@/components/StatusBadge";
+import { compressImage } from "@/lib/lowdata";
+
+const TIPS = [
+  ["1. Find good light", "Take photos in daylight, near the street or a window. Avoid dark corners and flash."],
+  ["2. Use a plain background", "Hang the item on a wall, door or rail, or lay it flat on a white sheet."],
+  ["3. Show the whole item", "Keep the full piece in the frame. Hold the phone straight, not at an angle."],
+  ["4. Write a clear title", "Say what it is, the colour and the brand, e.g. \"Black Nike hoodie, size L\"."],
+  ["5. Set a fair price", "Use your street price. Customers pay you cash when they collect."],
+  ["6. Answer fast", "When an order comes, the customer can send it to your WhatsApp. Mark it Ready when packed."],
+];
+
+function Onboarding() {
+  return (
+    <div className="my-6 rounded border-2 border-foreground p-6">
+      <p className="text-xs font-bold tracking-widest text-muted-foreground">GETTING STARTED</p>
+      <h2 className="mt-1 text-2xl">List your first item in 2 minutes</h2>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        {TIPS.map(([t, d]) => (
+          <div key={t}>
+            <p className="font-semibold">{t}</p>
+            <p className="text-sm text-muted-foreground">{d}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-sm font-semibold">Tap "Add item" above to begin. We shrink your photos automatically so they load fast on data.</p>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/sell")({
   head: () => ({
@@ -129,7 +157,7 @@ function Dashboard() {
       <Tabs defaultValue="products" className="mt-8">
         <TabsList><TabsTrigger value="products">Products</TabsTrigger><TabsTrigger value="orders">Orders</TabsTrigger></TabsList>
         <TabsContent value="products">
-          {products.length === 0 && <p className="py-8 text-muted-foreground">No listings yet — add your first item.</p>}
+          {products.length === 0 && <Onboarding />}
           <div className="grid gap-3">
             {products.map((p) => (
               <div key={p.id} className="flex items-center gap-4 rounded border p-3">
@@ -192,8 +220,9 @@ function ProductDialog() {
     setBusy(true);
     let image_url: string | null = null;
     if (file) {
-      const path = `${seller!.id}/${crypto.randomUUID()}-${file.name.replace(/[^\w.]/g, "")}`;
-      const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
+      const path = `${seller!.id}/${crypto.randomUUID()}.jpg`;
+      const small = await compressImage(file);
+      const { error: upErr } = await supabase.storage.from("product-images").upload(path, small, { contentType: "image/jpeg" });
       if (upErr) { setBusy(false); return toast.error(upErr.message); }
       const { data } = await supabase.storage.from("product-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
       image_url = data?.signedUrl ?? null;
