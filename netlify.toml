@@ -1,0 +1,21 @@
+# Netlify deployment for SA Streetwear (TanStack Start app served by Nitro).
+# Connect the repo in Netlify and these settings are picked up automatically.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Build for Netlify's functions runtime (also auto-detected; set explicitly
+  # so the target never falls back to the Cloudflare default).
+  NITRO_PRESET = "netlify"
+
+# Required environment variables — set these in Netlify:
+# Site settings → Environment variables (values from the project's .env):
+#   VITE_SUPABASE_URL
+#   VITE_SUPABASE_PUBLISHABLE_KEY
+#   SUPABASE_URL
+#   SUPABASE_PUBLISHABLE_KEY
+# And the AI secret (not stored in this repo):
+#   LOVABLE_API_KEY
