@@ -65,7 +65,12 @@ export type Database = {
           customer_id: string
           customer_name: string
           customer_phone: string
+          delivery_address: string
+          fulfillment: string
           id: string
+          payment_method: string
+          payment_reference: string | null
+          payment_status: string
           seller_id: string
           status: string
           total: number
@@ -75,7 +80,12 @@ export type Database = {
           customer_id: string
           customer_name?: string
           customer_phone?: string
+          delivery_address?: string
+          fulfillment?: string
           id?: string
+          payment_method?: string
+          payment_reference?: string | null
+          payment_status?: string
           seller_id: string
           status?: string
           total?: number
@@ -85,7 +95,12 @@ export type Database = {
           customer_id?: string
           customer_name?: string
           customer_phone?: string
+          delivery_address?: string
+          fulfillment?: string
           id?: string
+          payment_method?: string
+          payment_reference?: string | null
+          payment_status?: string
           seller_id?: string
           status?: string
           total?: number
