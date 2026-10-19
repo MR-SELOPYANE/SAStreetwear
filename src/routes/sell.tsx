@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { StatusBadge } from "@/components/StatusBadge";
 import { compressImage } from "@/lib/lowdata";
+import { paymentLabel } from "@/lib/checkout";
 
 const TIPS = [
   ["1. Find good light", "Take photos in daylight, near the street or a window. Avoid dark corners and flash."],
