@@ -182,23 +182,43 @@ function Dashboard() {
         <TabsContent value="orders">
           {orders.length === 0 && <p className="py-8 text-muted-foreground">No orders yet.</p>}
           <div className="grid gap-3">
-            {orders.map((o) => (
-              <div key={o.id} className="rounded border p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-semibold">{o.customer_name} · {o.customer_phone}</p>
-                  <StatusBadge status={o.status} />
+            {orders.map((o) => {
+              const delivery = o.fulfillment === "delivery";
+              const paidOnline = o.payment_method === "paystack" && o.payment_status === "paid";
+              const awaitingPay = o.payment_method === "paystack" && !paidOnline;
+              return (
+                <div key={o.id} className="rounded border p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-semibold">{o.customer_name} · {o.customer_phone}</p>
+                    <span className="flex items-center gap-2">
+                      <span className={`rounded px-2 py-0.5 text-xs font-bold ${paidOnline ? "bg-secondary text-secondary-foreground" : "border"}`}>
+                        {paymentLabel(o.payment_method, o.payment_status).toUpperCase()}
+                      </span>
+                      <StatusBadge status={o.status} />
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm">{delivery ? `Deliver to: ${o.delivery_address}` : "Shopper collects at your stall"}</p>
+                  <ul className="mt-2 text-sm text-muted-foreground">
+                    {o.order_items.map((i) => <li key={i.id}>{i.quantity} × {i.title} {i.size && `(${i.size})`}</li>)}
+                  </ul>
+                  {awaitingPay && o.status === "pending" && (
+                    <p className="mt-2 text-sm font-semibold">Waiting for the shopper to finish paying online — don't prepare yet.</p>
+                  )}
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span className="mr-auto font-bold">{formatZAR(o.total)}</span>
+                    {o.status === "pending" && !awaitingPay && (
+                      <Button size="sm" onClick={() => setStatus(o.id, "ready")}>{delivery ? "Out for delivery" : "Mark ready"}</Button>
+                    )}
+                    {o.status === "ready" && (
+                      <Button size="sm" onClick={() => setStatus(o.id, "collected")}>
+                        {delivery ? "Delivered" : "Collected"}{paidOnline ? "" : " & paid"}
+                      </Button>
+                    )}
+                    {(o.status === "pending" || o.status === "ready") && <Button size="sm" variant="outline" onClick={() => setStatus(o.id, "cancelled")}>Cancel</Button>}
+                  </div>
                 </div>
-                <ul className="mt-2 text-sm text-muted-foreground">
-                  {o.order_items.map((i) => <li key={i.id}>{i.quantity} × {i.title} {i.size && `(${i.size})`}</li>)}
-                </ul>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <span className="mr-auto font-bold">{formatZAR(o.total)}</span>
-                  {o.status === "pending" && <Button size="sm" onClick={() => setStatus(o.id, "ready")}>Mark ready</Button>}
-                  {o.status === "ready" && <Button size="sm" onClick={() => setStatus(o.id, "collected")}>Collected & paid</Button>}
-                  {(o.status === "pending" || o.status === "ready") && <Button size="sm" variant="outline" onClick={() => setStatus(o.id, "cancelled")}>Cancel</Button>}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </TabsContent>
       </Tabs>
