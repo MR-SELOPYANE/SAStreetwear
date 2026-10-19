@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatZAR } from "@/lib/format";
+import { paymentLabel } from "@/lib/checkout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -101,7 +102,7 @@ function AdminPage() {
           {(data?.orders ?? []).map((o) => (
             <div key={o.id} className="flex items-center justify-between rounded border p-3 text-sm">
               <span>{o.customer_name} → {o.sellers?.shop_name}</span>
-              <span className="flex items-center gap-3"><b>{formatZAR(o.total)}</b><StatusBadge status={o.status} /></span>
+              <span className="flex items-center gap-3"><span className="text-xs text-muted-foreground">{paymentLabel(o.payment_method, o.payment_status)}</span><b>{formatZAR(o.total)}</b><StatusBadge status={o.status} /></span>
             </div>
           ))}
         </TabsContent>
