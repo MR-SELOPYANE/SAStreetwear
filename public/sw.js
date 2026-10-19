@@ -19,6 +19,8 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.pathname.startsWith("/api/") || url.pathname.includes("/auth/v1/")) return;
+  // Never cache the payment window.
+  if (url.hostname.includes("paystack")) return;
 
   // Pages and data: try network first, fall back to the saved copy.
   if (req.mode === "navigate" || url.pathname.includes("/rest/v1/")) {
