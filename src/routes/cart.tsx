@@ -64,7 +64,7 @@ function Choice({
         <span className="flex items-center gap-2 font-display uppercase">
           {title}
           {badge && (
-            <span className={`rounded px-1.5 py-0.5 text-[10px] font-sans font-bold ${active ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+            <span className={`rounded px-1.5 py-0.5 text-[10px] font-sans font-bold ${active ? "bg-background text-foreground" : "bg-secondary text-secondary-foreground"}`}>
               {badge}
             </span>
           )}
@@ -286,7 +286,6 @@ function CartPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-t p-4">
               <p className="text-lg font-bold">Total {formatZAR(total)}</p>
               <Button
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
                 onClick={() => placeOrder(sellerId, list)}
                 disabled={busy !== null}
               >
