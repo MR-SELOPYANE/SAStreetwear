@@ -12,6 +12,8 @@ The app is a TanStack Start project and builds for Netlify out of the box (`netl
    - `SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY`
    - `LOVABLE_API_KEY` (the AI key for the Stylist chat — not stored in the repo)
+   - `PAYSTACK_SECRET_KEY` (Paystack → Settings → API Keys & Webhooks; `sk_test_…` for testing, `sk_live_…` to take real money). Without it, checkout still works but "Pay online" asks shoppers to choose cash.
+   - Note: marking Paystack orders as paid uses a server-only backend key that exists only on Lovable hosting, so on Netlify online payments open but cannot be confirmed. Use the Lovable-published site for online payments.
 4. Deploy. Every push to the branch the site watches triggers a new deployment.
 5. Update sign-in redirects: add the new Netlify URL (e.g. `https://your-site.netlify.app/**`) to the allowed redirect URLs in the authentication settings, or Google sign-in will fail on the new domain.
 
