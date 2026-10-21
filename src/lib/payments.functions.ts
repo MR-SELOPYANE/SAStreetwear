@@ -90,8 +90,6 @@ export const confirmPaystackPayment = createServerFn({ method: "POST" })
     z.object({ orderId: z.string().uuid(), reference: z.string().min(4).max(100) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const key = process.env["PAYSTACK_SECRET_KEY"];
-    if (!key) return { paid: false, error: NOT_READY };
     try {
       const order = await loadOwnOrder(context.supabase, data.orderId, context.userId);
       if (order.payment_status === "paid") return { paid: true };

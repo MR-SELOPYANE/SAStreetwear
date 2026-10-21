@@ -11,6 +11,12 @@ export function usePayOrder() {
   return async (orderId: string): Promise<PayResult> => {
     const init = await start({ data: { orderId } });
     if ("error" in init && init.error) return { status: "error", error: init.error };
+    // Demo mode: no Paystack key — the server marks the order paid right away.
+    if ("simulated" in init && init.simulated) {
+      const res = await confirm({ data: { orderId, reference: init.reference } });
+      if (!res.paid) return { status: "error", error: res.error ?? "Payment not confirmed" };
+      return { status: "paid", reference: init.reference };
+    }
     if (!("accessCode" in init) || !init.accessCode) return { status: "error", error: "Could not start the payment" };
 
     const { default: PaystackPop } = await import("@paystack/inline-js");
