@@ -10,5 +10,5 @@
 <!-- LOVABLE:END -->
 
 ## Rules
-- Order payment fields (payment_status, payment_reference, total, payment method/fulfillment) are changed only server-side: a DB trigger blocks shopper/vendor edits, and Paystack payments are marked paid only after `confirmPaystackPayment` verifies the transaction with Paystack. Why: the browser can't be trusted to say an order is paid.
+- Order payment fields (payment_status, payment_reference, total, payment method/fulfillment) are changed only server-side: a DB trigger blocks shopper/vendor edits, and Paystack payments are marked paid only after `confirmPaystackPayment` verifies the transaction with Paystack (except demo mode: with no PAYSTACK_SECRET_KEY, only server-issued `sim_` references complete an order). Why: the browser can't be trusted to say an order is paid.
 - Paystack amounts are computed on the server from current product prices, never from the cart. Why: stops shoppers paying less than the real price.
